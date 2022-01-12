@@ -46,7 +46,7 @@ jobs:
         with:
           builder: ${{ steps.buildx.outputs.name }}
           push: true
-          platforms: linux/amd64,linux/arm7
+          platforms: linux/amd64
           tags: |
             almir1904/anime-loads:latest
             ghcr.io/almir1904/docker-qbittorrent-enhanced:latest
