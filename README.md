@@ -1,6 +1,6 @@
 # docker-qBittorrent-enhanced-edition
 
-
+```
 docker run -d \
   --name=qbittorrent \
   -e PUID=1000 \
@@ -14,3 +14,4 @@ docker run -d \
   -v /pathtochange:/downloads \
   --restart unless-stopped \
   almir1904/docker-qbittorrent-enhanced
+  ```
