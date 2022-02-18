@@ -1,12 +1,12 @@
 version: "2"
 services:
   aria2:
-    image: superng6/qbittorrentee
-    container_name: qbittorrentee
+    image: almir1904/docker-qbittorrent-enhanced
+    container_name: qbittorrent-enhanced
     environment:
       - PUID=1026
       - PGID=100
-      - TZ=Asia/Shanghai
+      - TZ=Europe/Vienna
     volumes:
       - /path/to/appdata/config:/config
       - /path/to/downloads:/downloads
