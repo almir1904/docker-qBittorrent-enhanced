@@ -1,6 +1,6 @@
 version: "2"
 services:
-  aria2:
+  qbittorrent-enhanced:
     image: almir1904/docker-qbittorrent-enhanced
     container_name: qbittorrent-enhanced
     environment:
