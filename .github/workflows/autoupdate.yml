@@ -36,6 +36,7 @@ jobs:
         id: read_release_tag
         run: |
           release_tag=$(cat ReleaseTag)
+          echo "$release_tag"
           echo "::set-output name=release_tag::$release_tag"
         
       - name: Compare releases and update ReleaseTag
