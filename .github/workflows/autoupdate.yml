@@ -59,9 +59,7 @@ jobs:
           git add ReleaseTag
           git commit -m "Update ReleaseTag to ${{ env.Latest_Release }}"
           git push
+          exit 0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Exit successfully if ReleaseTag and Latest are the same
-        if: ${{ env.Release_Tag }} == ${{ env.Latest_Release }}
-        run: exit 0
