@@ -39,7 +39,7 @@ jobs:
         run: |
           release_tag=$(cat ReleaseTag)
           echo "Current Release: $release_tag"
-          echo "Latest Tag: ${{ env.LatestRelease }}"
+          echo "Latest Tag: $LatestRelease"
           echo "Release Tag: $release_tag"
           echo "ReleaseTag=$release_tag" >> $GITHUB_ENV
         
@@ -47,7 +47,7 @@ jobs:
         if: ${{ env.ReleaseTag }} != ${{ env.LatestRelease }}
         run: |
           echo "Updating ReleaseTag file"
-          echo ${{ env.LatestRelease }} > ReleaseTag
+          echo $LatestRelease > ReleaseTag
           cat ReleaseTag
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
