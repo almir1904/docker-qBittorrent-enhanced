@@ -28,7 +28,8 @@ jobs:
         run: |
           release_url="https://api.github.com/repos/c0re100/qBittorrent-Enhanced-Edition/releases/latest"
           latest_release=$(curl -s $release_url | jq -r .tag_name)
-          echo "Newest Release: $latest_release"
+          latest_release=${latest_release#release-}  # Remove "release-" prefix
+          echo "Latest release from API: $latest_release"
           echo "::set-output name=latest_release::$latest_release"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
