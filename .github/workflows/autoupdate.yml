@@ -1,0 +1,53 @@
+name: Check and Update ReleaseTag
+
+on:
+  schedule:
+    # Define the schedule when you want the workflow to run (e.g., daily).
+    - cron: '0 0 * * *'
+
+jobs:
+  update_release_tag:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+
+      - name: Get latest release from linked repository
+        id: latest_release
+        run: |
+          release_url="https://api.github.com/repos/c0re100/qBittorrent-Enhanced-Edition/releases/latest"
+          latest_release=$(curl -s $release_url | jq -r .tag_name)
+          echo "::set-output name=latest_release::$latest_release"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Read current ReleaseTag file
+        id: read_release_tag
+        run: |
+          release_tag=$(cat ReleaseTag)
+          echo "::set-output name=release_tag::$release_tag"
+        
+      - name: Compare releases and update ReleaseTag
+        if: steps.read_release_tag.outputs.release_tag != steps.latest_release.outputs.latest_release
+        run: |
+          echo "Updating ReleaseTag file"
+          echo $latest_release > ReleaseTag
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          
+      - name: Commit and push if ReleaseTag was updated
+        if: steps.read_release_tag.outputs.release_tag != steps.latest_release.outputs.latest_release
+        run: |
+          git config --global user.name 'GitHub Actions'
+          git config --global user.email 'actions@github.com'
+          git add ReleaseTag
+          git commit -m "Update ReleaseTag to $latest_release"
+          git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
