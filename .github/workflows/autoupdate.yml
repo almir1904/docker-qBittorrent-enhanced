@@ -61,3 +61,7 @@ jobs:
           git push
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Exit successfully if ReleaseTag and Latest are the same
+        if: ${{ env.Release_Tag }} == ${{ env.Latest_Release }}
+        run: exit 0
