@@ -57,8 +57,12 @@ jobs:
           git config --global user.name 'GitHub Actions'
           git config --global user.email 'actions@github.com'
           git add ReleaseTag
-          git commit -m "Update ReleaseTag to ${{ env.Latest_Release }}"
-          git push || true
+          if [[ -n $(git status --porcelain) ]]; then
+            git commit -m "Update ReleaseTag to $latest_release"
+            git push || true  # This will ensure the workflow exits with success even if there is an error.
+          else
+            echo "No changes to commit."
+          fi
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
