@@ -58,8 +58,7 @@ jobs:
           git config --global user.email 'actions@github.com'
           git add ReleaseTag
           git commit -m "Update ReleaseTag to ${{ env.Latest_Release }}"
-          git push
-          exit 0
+          git push || true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
