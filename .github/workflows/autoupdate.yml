@@ -2,8 +2,13 @@ name: Check and Update ReleaseTag
 
 on:
   schedule:
-    # Define the schedule when you want the workflow to run (e.g., daily).
     - cron: '0 0 * * *'
+  workflow_dispatch:
+    inputs:
+      manual_trigger:
+        description: 'Manually trigger the workflow'
+        default: 'false'
+        required: false
 
 jobs:
   update_release_tag:
