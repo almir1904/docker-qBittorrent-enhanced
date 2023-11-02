@@ -39,26 +39,25 @@ jobs:
         run: |
           release_tag=$(cat ReleaseTag)
           echo "Current Release: $release_tag"
-          echo "Latest Tag: $LatestRelease"
+          echo "Latest Tag: Latest_Release"
           echo "Release Tag: $release_tag"
-          echo "ReleaseTag=$release_tag" >> $GITHUB_ENV
+          echo "Release_Tag=$release_tag" >> $GITHUB_ENV
         
       - name: Compare releases and update ReleaseTag
-        if: ${{ env.ReleaseTag }} != ${{ env.LatestRelease }}
+        if: ${{ env.Release_Tag }} != ${{ env.Latest_Release }}
         run: |
           echo "Updating ReleaseTag file"
-          echo $LatestRelease > ReleaseTag
-          cat ReleaseTag
+          echo $Latest_Release > ReleaseTag
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           
-    #  - name: Commit and push if ReleaseTag was updated
-    #    if: ${{ env.ReleaseTag }} != ${{ env.LatestRelease }}
-    #   run: |
-    #      git config --global user.name 'GitHub Actions'
-    #      git config --global user.email 'actions@github.com'
-    #      git add ReleaseTag
-    #      git commit -m "Update ReleaseTag to ${{ env.LatestRelease }}"
-    #      git push
-    #    env:
-    #      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Commit and push if ReleaseTag was updated
+        if: ${{ env.Release_Tag }} != ${{ env.Latest_Release }}
+        run: |
+          git config --global user.name 'GitHub Actions'
+          git config --global user.email 'actions@github.com'
+          git add ReleaseTag
+          git commit -m "Update ReleaseTag to ${{ env.Latest_Release }}"
+          git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
