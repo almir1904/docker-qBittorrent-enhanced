@@ -1,4 +1,4 @@
-FROM ghcr.io/linuxserver/baseimage-alpine:3.20 as builder
+FROM ghcr.io/linuxserver/baseimage-alpine:3.21 as builder
 LABEL maintainer="Almir1904"
 
 WORKDIR /qbittorrent
@@ -9,7 +9,7 @@ RUN  apk add --no-cache ca-certificates curl && \
      bash install.sh
 
 # Stage 2: Create the final image
-FROM ghcr.io/linuxserver/baseimage-alpine:3.20
+FROM ghcr.io/linuxserver/baseimage-alpine:3.21
 
 # Environment settings
 ENV TZ=Europe/Vienna
