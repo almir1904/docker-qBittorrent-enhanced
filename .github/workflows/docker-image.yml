@@ -10,11 +10,11 @@ jobs:
       - name: Check out the repo
         uses: actions/checkout@v4.2.2
       
-      - name: Log in to Docker Hub
-        uses: docker/login-action@v3.3.0
-        with:
-          username: ${{ github.actor }}
-          password: ${{ secrets.DOCKER_HUB_PASSWORD }}
+     # - name: Log in to Docker Hub
+     #   uses: docker/login-action@v3.3.0
+     #   with:
+     #     username: ${{ github.actor }}
+     #     password: ${{ secrets.DOCKER_HUB_PASSWORD }}
           
       - name: Log in to Github
         uses: docker/login-action@v3.3.0
@@ -48,6 +48,5 @@ jobs:
           push: true
           platforms: linux/amd64
           tags: |
-            almir1904/docker-qbittorrent-enhanced:latest
             ghcr.io/almir1904/docker-qbittorrent-enhanced:latest
           labels: ${{ steps.meta.outputs.labels }}
