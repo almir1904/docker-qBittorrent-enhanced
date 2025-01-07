@@ -27,8 +27,14 @@ jobs:
         id: latest_release
         run: |
           release_url="https://api.github.com/repos/c0re100/qBittorrent-Enhanced-Edition/releases/latest"
-          latest_release=$(curl -s $release_url | jq -r .tag_name)
-          latest_release=${latest_release#release-}  # Remove "release-" prefix
+          response=$(curl -s -H "Authorization: token $GITHUB_TOKEN" $release_url)
+          latest_release=$(echo "$response" | jq -r '.tag_name')
+          if [[ "$latest_release" == "null" || -z "$latest_release" ]]; then
+            echo "Failed to fetch the latest release. Response was:"
+            echo "$response"
+            exit 1
+          fi
+          latest_release=${latest_release#release-}  # Remove "release-" prefix if exists
           echo "Latest release from API: $latest_release"
           echo "Latest_Release=$latest_release" >> $GITHUB_ENV
         env:
@@ -37,32 +43,32 @@ jobs:
       - name: Read current ReleaseTag file
         id: read_release_tag
         run: |
-          release_tag=$(cat ReleaseTag)
+          if [[ -f ReleaseTag ]]; then
+            release_tag=$(cat ReleaseTag)
+          else
+            echo "ReleaseTag file does not exist. Creating one."
+            release_tag=""
+          fi
           echo "Current Release: $release_tag"
-          echo "Latest Tag: Latest_Release"
-          echo "Release Tag: $release_tag"
           echo "Release_Tag=$release_tag" >> $GITHUB_ENV
-        
+
       - name: Compare releases and update ReleaseTag
-        if: ${{ env.Release_Tag }} != ${{ env.Latest_Release }}
+        if: env.Release_Tag != env.Latest_Release
         run: |
           echo "Updating ReleaseTag file"
-          echo $Latest_Release > ReleaseTag
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          
+          echo "${{ env.Latest_Release }}" > ReleaseTag
+
       - name: Commit and push if ReleaseTag was updated
-        #if: ${{ env.Release_Tag }} != ${{ env.Latest_Release }}
+        if: env.Release_Tag != env.Latest_Release
         run: |
           git config --global user.name 'GitHub Actions'
           git config --global user.email 'actions@github.com'
           git add ReleaseTag
           if [[ -n $(git status --porcelain) ]]; then
             git commit -m "Update ReleaseTag to ${{ env.Latest_Release }}"
-            git push || true  # This will ensure the workflow exits with success even if there is an error.
+            git push
           else
             echo "No changes to commit."
           fi
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
