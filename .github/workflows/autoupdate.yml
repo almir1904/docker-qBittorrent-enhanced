@@ -72,3 +72,10 @@ jobs:
           fi
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Trigger Docker Build Workflow
+        if: env.Release_Tag != env.Latest_Release
+        run: |
+          gh workflow run docker-build.yml
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
